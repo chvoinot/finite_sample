@@ -1,0 +1,44 @@
+---
+title: "Covariates subset and finite samples"
+author:
+  - Bénédicte Colnet [Inria, Paris-Saclay]
+date: "September 2021"
+output:
+  html_document:
+    code_folding: "hide"
+    number_sections: no
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    toc: yes
+abstract: | 
+  Results & plots. 
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+# Reproducibility
+set.seed(123)
+
+# Libraries
+library(dplyr) # case_when and others
+library(ggplot2)
+
+```
+
+
+```{r}
+non.linear <- read.csv("./data/2021-10-23-linear-nonindep.csv")
+non.linear$sample.size <- as.factor(non.linear$sample.size )
+```
+
+
+```{r}
+ggplot(non.linear[non.linear$estimator %in% c("tmle", "aipw") & non.linear$sample.size != 100,], aes(x = sample.size, y = estimate, fill = subset)) +
+  geom_boxplot(alpha = 0.8) +
+  facet_grid(cross.fitting~estimator) +
+  theme_minimal() +
+  geom_hline(yintercept = 3, linetype = "dashed", color = "darkblue")
+```
+
