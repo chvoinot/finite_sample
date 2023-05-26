@@ -38,7 +38,8 @@ source("generate_data_models.R")
 
 
 ```{r}
-a_simulation <- generate_simulation_linear_constant_cate()
+a_simulation <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/test.csv")
+a_simulation$sample.size <- as.factor(a_simulation$sample.size )
 ```
 
 
@@ -180,7 +181,7 @@ aipw_ML(paste0("X.", 1:12), paste0("X.", 1:12), dataframe = a_simulation, n.fold
 
 
 ```{r}
-a_simulation <- generate_simulation_linear_constant_cate()
+#a_simulation <- generate_simulation_linear_constant_cate()
 # for maximum accuracy one may try glmnet, randomForest, XGBoost, SVM, and bartMachine
 sl_lib = c("SL.lm", "SL.mean")
 # by default it uses 10 cross fold validation

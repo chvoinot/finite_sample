@@ -1,8 +1,8 @@
 ---
 title: "Covariates subset and finite samples"
 author:
-  - Bénédicte Colnet [Inria, Paris-Saclay]
-date: "September 2021"
+  - Charlotte Voinot [Inria, Sanofi]
+date: "Mai 2023"
 output:
   html_document:
     code_folding: "hide"
@@ -27,18 +27,109 @@ library(ggplot2)
 
 ```
 
+In this simulations set-up, non-linear and complex surface responses and propensity scores are generated from the covariates.  The simulations set is taken from Nie and Wager (2020), where the three generative process simulated are highly non-linear.
 
+Data set A : 
 ```{r}
-non.linear <- read.csv("./data/2021-10-23-linear-nonindep.csv")
-non.linear$sample.size <- as.factor(non.linear$sample.size )
+#non linear estimator (forest) on non linear Wager dataset 
+non.linear_A <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/A.csv")
+non.linear_A$sample.size <- as.factor(non.linear_A$sample.size )
+
+#linear estimator on non linear Wager dataset  
+linear_A <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/A_linear.csv")
+linear_A$sample.size <- as.factor(linear_A$sample.size )
+
+#fusion of the two 
+dataset_A <- rbind(non.linear_A,linear_A)
 ```
 
 
 ```{r}
-ggplot(non.linear[non.linear$estimator %in% c("tmle", "aipw") & non.linear$sample.size != 100,], aes(x = sample.size, y = estimate, fill = subset)) +
+ggplot(dataset_A, aes(x = sample.size, y = estimate, fill = subset)) +
   geom_boxplot(alpha = 0.8) +
-  facet_grid(cross.fitting~estimator) +
   theme_minimal() +
-  geom_hline(yintercept = 3, linetype = "dashed", color = "darkblue")
+  facet_grid(~nuisance, scales = 'free') +
+  theme(strip.background = element_rect(colour="black", fill="white", 
+                                       size=1.5, linetype="solid"))+
+  geom_hline(yintercept = 0.9, linetype = "dashed", color = "darkblue")+
+  geom_hline(yintercept = 0.50, linetype = "dashed", color = "red")
+```
+Keeping simple linear and logistic model of the covariates leads to a mispecification bias.
+
+Data set B : 
+
+```{r}
+#non linear estimator (forest) on non linear Wager dataset 
+non.linear_B <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/B.csv")
+non.linear_B$sample.size <- as.factor(non.linear_B$sample.size )
+
+#linear estimator on non linear Wager dataset  
+linear_B <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/B_linear.csv")
+linear_B$sample.size <- as.factor(linear_B$sample.size )
+
+#fusion of the two 
+dataset_B <- rbind(non.linear_B,linear_B)
 ```
 
+```{r}
+ggplot(dataset_B, aes(x = sample.size, y = estimate, fill = subset)) +
+  geom_boxplot(alpha = 0.8) +
+  theme_minimal() +
+  facet_grid(~nuisance, scales = 'free') +
+  theme(strip.background = element_rect(colour="black", fill="white", 
+                                       size=1.5, linetype="solid"))+
+  geom_hline(yintercept = 1, linetype = "dashed", color = "darkblue")+
+  geom_hline(yintercept = 0.8, linetype = "dashed", color = "red")
+```
+
+Data set C 
+
+```{r}
+#non linear estimator (forest) on non linear Wager dataset 
+non.linear_C <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/C.csv")
+non.linear_C$sample.size <- as.factor(non.linear_C$sample.size )
+
+#linear estimator on non linear Wager dataset  
+linear_C <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/C_linear.csv")
+linear_C$sample.size <- as.factor(linear_C$sample.size )
+
+#fusion of the two 
+dataset_C <- rbind(non.linear_C,linear_C)
+```
+
+```{r}
+ggplot(dataset_C, aes(x = sample.size, y = estimate, fill = subset)) +
+  geom_boxplot(alpha = 0.8) +
+  theme_minimal() +
+  facet_grid(~nuisance, scales = 'free') +
+  theme(strip.background = element_rect(colour="black", fill="white", 
+                                       size=1.5, linetype="solid"))+
+  geom_hline(yintercept = 1, linetype = "dashed", color = "darkblue")+
+  geom_hline(yintercept = 0.50, linetype = "dashed", color = "red")
+```
+Data set D 
+
+```{r}
+#non linear estimator (forest) on non linear Wager dataset 
+non.linear_D <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/D.csv")
+non.linear_D$sample.size <- as.factor(non.linear_D$sample.size )
+
+#linear estimator on non linear Wager dataset  
+linear_D <- read.csv("C:/Users/I0566478/OneDrive - Sanofi/Charlotte/Bibliographie/Benedicte Projet/finite_sample/data/D_linear.csv")
+linear_D$sample.size <- as.factor(linear_D$sample.size )
+
+#fusion of the two 
+dataset_D <- rbind(non.linear_D,linear_D)
+```
+
+```{r}
+ggplot(dataset_D, aes(x = sample.size, y = estimate, fill = subset)) +
+  geom_boxplot(alpha = 0.8) +
+  theme_minimal() +
+  facet_grid(~nuisance, scales = 'free') +
+  theme(strip.background = element_rect(colour="black", fill="white", 
+                                       size=1.5, linetype="solid"))+
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "darkblue")+
+  geom_hline(yintercept = 0.09, linetype = "dashed", color = "red")+
+  ggtitle("")
+```

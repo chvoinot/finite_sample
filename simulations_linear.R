@@ -28,9 +28,9 @@ for (sample.size in c(500, 1000, 3000, 10000)){
   print(paste0("Starting sample size ", sample.size))
   for (i in 1:50){
     for (independence in c(TRUE)){
-      
+      print(sample.size)
       # generate a simulation
-      a_simulation <- generate_simulation_linear(n_obs = sample.size, independent_covariate = independence)
+      a_simulation <- generate_simulation_linear(n = sample.size, independent_covariate = independence)
       
       # choose subset
       for (method in different_subset_tested){
@@ -82,3 +82,4 @@ for (sample.size in c(500, 1000, 3000, 10000)){
 results.linear$sample.size <- as.factor(results.linear$sample.size)
 
 write.csv(x=results.linear, file="./data/linear.csv")
+write.csv(x=a_simulation,file ="./data/simulation_linear.csv")

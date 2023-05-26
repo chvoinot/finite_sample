@@ -1,12 +1,12 @@
 #### IPW with forest with deep trees
-
-ipw_forest <- function(covariates_names,
+#### deep trees : without biais but with noise
+ipw_forest <- function(covariates_names,#vector covariates names
                         dataframe,
                         outcome_name = "Y",
                         treatment_name = "A",
                         min.node.size.if.forest = 1,
-                        number.of.trees = 1000) {
-  
+                        number.of.trees = 1000){ #enough trees to have strong prediction, in probability_forest package = 2000 trees 
+                        
   n <- nrow(dataframe)
   Y = dataframe[, outcome_name]
   W = dataframe[, treatment_name]
@@ -16,6 +16,7 @@ ipw_forest <- function(covariates_names,
                                          num.trees = number.of.trees, 
                                          min.node.size = min.node.size.if.forest)
   
+  #compute the propensity score prediction on data 
   e.hat <- predict(propensity.model, data = X_t)$predictions[,2]
   ipw = mean(Y * (W/e.hat - (1-W)/(1-e.hat)))
 
@@ -30,33 +31,34 @@ ipw_forest <- function(covariates_names,
 
 #### g-formula with forest with deep trees
 
-t_learner_forest <- function(covariates_names,
+t_learner_forest <- function(covariates_names,#vector covariates names
                        dataframe,
                        outcome_name = "Y",
                        treatment_name = "A",
                        min.node.size.if.forest = 5, #like in grf package and in particular causal forests
                        number.of.trees = 200, #like in grf package and in particular causal forests
-                       return.decomposition = FALSE) {
+                       return.decomposition = FALSE){ # decomposition to target the origin bias (if existing) {
   
   n <- nrow(dataframe)
   Y = dataframe[, outcome_name]
   W = dataframe[, treatment_name]
   
-  # Estimation
+  # Estimation with regression forest for treated group
   outcome.model.treated <- regression_forest(X = dataframe[ dataframe[,treatment_name] == 1, covariates_names], 
                                              Y = dataframe[dataframe[,treatment_name] == 1, outcome_name], 
                                              num.trees = number.of.trees, 
                                              min.node.size = min.node.size.if.forest)
-  
+  #Estimation with regression forest for control group
   outcome.model.control <- regression_forest(X = dataframe[dataframe[,treatment_name] == 0, covariates_names], 
                                              Y = dataframe[dataframe[,treatment_name] == 0, outcome_name], 
                                              num.trees = number.of.trees, 
                                              min.node.size = min.node.size.if.forest)
 
-  # Prediction
+  # Prediction to extend results on missing data 
   mu.hat.1 <- predict(outcome.model.treated, data = xt1)$predictions
   mu.hat.0 <- predict(outcome.model.control, data = xt0)$predictions
   
+  # ATE
   t_learner = mean(mu.hat.1) - mean(mu.hat.0)
   
   return(t_learner)
@@ -70,15 +72,15 @@ t_learner_forest <- function(covariates_names,
 ### Custom AIPW with forest 
 
 # custom AIPW with forest
-aipw_forest <- function(covariates_names_vector_treatment, 
-                        covariates_names_vector_outcome,
+aipw_forest <- function(covariates_names_vector_treatment, #covariate impacting the treatment
+                        covariates_names_vector_outcome, #covariate impacting the outcome
                         dataframe,
                         outcome_name = "Y",
                         treatment_name = "A",
-                        n.folds = 2,
-                        outcome_nature = "continuous",
+                        n.folds = 2, # n-folds for cross-validation
+                        outcome_nature = "continuous", #continuous or binary
                         min.node.size.if.forest = 1,
-                        return.decomposition = FALSE) {
+                        return.decomposition = FALSE){ # decomposition to target the origin bias (if existing)  {
   
   n <- nrow(dataframe)
   
@@ -618,3 +620,4 @@ DoubleML_wrapper_fast <- function(covariates_names_vector,
   return(dml_irm_forest$coef[[1]])
   
 }
+

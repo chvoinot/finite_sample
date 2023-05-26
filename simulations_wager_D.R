@@ -33,9 +33,9 @@ different_subset_tested <- c("extended",
                              "smart",
                              "minimal")
 
-for (sample.size in c(100, 300, 1000, 3000, 10000, 30000, 100000)){
+for (sample.size in c(100, 300, 1000)){
   print(paste0("Starting sample size ", sample.size))
-  for (i in 1:50){
+  for (i in 1:10){
     
     # generate a simulation
     a_simulation <- generate_simulation_wager_nie(n = sample.size, setup = "D", all_covariates_output = TRUE)
@@ -48,8 +48,8 @@ for (sample.size in c(100, 300, 1000, 3000, 10000, 30000, 100000)){
         
         custom_ipw <- ipw_forest(covariates_names = X_treatment, 
                                  dataframe = a_simulation,
-                                 min.node.size.if.forest = 1,
-                                 return.decomposition = TRUE)
+                                 min.node.size.if.forest = 1)#,
+                                 #return.decomposition = TRUE)
         
         new.row <- data.frame("sample.size" = sample.size,
                               "estimate" = custom_ipw,
@@ -73,8 +73,8 @@ for (sample.size in c(100, 300, 1000, 3000, 10000, 30000, 100000)){
         
         custom_ipw <- ipw_forest(covariates_names = paste0("X.", 1:2), 
                                  dataframe = a_simulation,
-                                 min.node.size.if.forest = 1,
-                                 return.decomposition = TRUE)
+                                 min.node.size.if.forest = 1)#,
+                                 #return.decomposition = TRUE)
         
         new.row <- data.frame("sample.size" = sample.size,
                               "estimate" = custom_ipw,
@@ -99,16 +99,16 @@ for (sample.size in c(100, 300, 1000, 3000, 10000, 30000, 100000)){
                                  dataframe = a_simulation,
                                  min.node.size.if.forest = 1,
                                  n.folds = 2,
-                                 return.decomposition = TRUE,
-                                 with.weights = FALSE)
+                                 return.decomposition = TRUE)#,
+                                 #with.weights = FALSE)
       
       custom_aipw_with_weigths <- aipw_forest(X_treatment, 
                                               X_outcome, 
                                               dataframe = a_simulation,
                                               min.node.size.if.forest = 1,
                                               n.folds = 2,
-                                              return.decomposition = TRUE,
-                                              with.weights = TRUE)
+                                              return.decomposition = TRUE)#,
+                                              #with.weights = TRUE)
       
       new.row <- data.frame("sample.size" = rep(sample.size, 5),
                             "estimate" = c(custom_aipw["aipw"], custom_aipw["t.learner"], custom_aipw["ipw"], custom_aipw["semi.oracle.aipw"], custom_aipw_with_weigths["aipw"]),

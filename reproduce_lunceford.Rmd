@@ -193,7 +193,7 @@ ggplot(comparison.estimators, aes(x = method, y = estimate, fill = method)) +
   scale_fill_brewer(palette = "Accent") +
   coord_flip() +
   ylim(0,5)
-ggsave("./fig/lunceford.pdf", width = 6, height = 5)
+#ggsave("./fig/lunceford.pdf", width = 6, height = 5)
 ```
 
 
@@ -211,7 +211,7 @@ ggplot(comparison.estimators[comparison.estimators$method %in% c("IPW oracle", "
   scale_fill_brewer(palette = "Accent") +
   coord_flip() +
   ylim(0,5)
-ggsave("./fig/lunceford_bis.pdf", width = 6, height = 5)
+#ggsave("./fig/lunceford_bis.pdf", width = 6, height = 5)
 ```
 
 ```{r}
@@ -226,7 +226,7 @@ binned <- data.frame("estimate" = c(),
 
 for (i in 1:500){
   simulation <- generate_lunceford(n = 1000, return_oracles = TRUE)
-  
+   
 
   ipw.10 <- binned_ipw(covariates_names_vector = paste0("X.", 1:3),
                       dataframe =  simulation,

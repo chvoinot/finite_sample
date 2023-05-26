@@ -38,9 +38,9 @@ fmla.outcome.ext <-  formula("Y ~ X.1 + X.2 + X.3 + X.4 + X.5 + X.6")
 fmla.treat <-  formula("A ~ X.1 + X.2 + X.3")
 fmla.treat.ext  <-  formula("A ~ X.1 + X.2 + X.3 + X.4 + X.5 + X.6")
 
-for (sample.size in c(100, 300, 1000, 3000, 10000, 30000, 100000)){
+for (sample.size in c(100, 300, 1000)){
   print(paste0("Starting sample size ", sample.size))
-  for (i in 1:50){
+  for (i in 1:10){
     
     # generate a simulation
     simulation <- generate_simulation_wager_nie(n = sample.size, setup = "B", all_covariates_output = TRUE)

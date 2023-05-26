@@ -14,6 +14,7 @@ generate_simulation_wager_nie <- function(n = 1000, p = 6, setup = "D", all_cova
     
     X = matrix(rnorm(n * p), n, p)
     b = pmax(0, X[,1] + X[,2], X[,3]) + pmax(0, X[,4] + X[,5])
+    eta =0.1
     e = pmax(eta, pmin(sin(pi * X[,1] * X[,2]), 1-eta)) # this row only is changed
     tau = X[,1] + log(1 + exp(X[,2]))
     
